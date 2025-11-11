@@ -2,14 +2,25 @@
 
 import express, { Request, Response } from 'express';
 import Product, { ProductDocument } from '../models/productModel';
-import { error } from 'console';
 
 const router = express.Router();
 
+let cache: ProductDocument[] | null = null;
+let lastFetch = 0;
+
 router.get('/', async (req: Request, res: Response) => {
+  const now = Date.now();
+
+  if (cache && now - lastFetch < 60000){
+    return res.json(cache);
+  }
+
   try {
     const products: ProductDocument[] = await Product.find();
-    res.json(products);
+    cache = products;
+    lastFetch = now;
+
+    return res.json(products);
   } catch (err) {
     console.error('Error fetching products:', err);
     res.status(500).json({ error: 'Server error' });
