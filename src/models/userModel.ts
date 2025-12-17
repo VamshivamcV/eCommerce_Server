@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 interface CartItem {
     product: Types.ObjectId;
-    name: string;
+    title: string;
     qty: number;
     price: number;
     image: string;
@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema<IUser>({
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Product',
             },
-            name: String,
+            title: String,
             qty: Number,
             price: Number,
             image: String,
